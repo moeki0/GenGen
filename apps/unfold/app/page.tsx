@@ -884,11 +884,9 @@ export default function Home() {
         {/* Left margin — map */}
         <div className="ms-left">
           {(() => {
-            // When deepdive is active, show fork-related map; otherwise show main map
-            const forkCodes = fork ? resolveCountryCodes(fork.text.split(/[、,\n]/).map(s => s.trim())) : new Set<number>()
-            const mainCodes = resolveCountryCodes(allCountries)
-            const mapCodes = forkCodes.size > 0 ? forkCodes : mainCodes
-            const mapLabel = fork ? fork.term : currentTopic
+            // Always show main article's countries, not deepdive's
+            const mapCodes = resolveCountryCodes(allCountries)
+            const mapLabel = currentTopic
             if (mapCodes.size === 0) return null
             return (
               <div>
