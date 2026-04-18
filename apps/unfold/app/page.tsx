@@ -1196,7 +1196,7 @@ export default function Home() {
             style={{
               flex: 1, padding: '0.5rem 0',
               background: 'transparent', border: 'none',
-              color: '#111', fontSize: '0.875rem', outline: 'none',
+              color: '#111', fontSize: '16px', outline: 'none',
               fontFamily: 'inherit', resize: 'none',
               opacity: phase === 'streaming' ? 0.4 : 1,
             }} />
