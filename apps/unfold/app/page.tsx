@@ -1351,11 +1351,11 @@ export default function Home() {
           min-width: 0;
         }
         .ms-center img {
-          max-width: 200px;
+          max-width: 500px;
+          width: 100%;
           height: auto;
           display: block;
-          border-radius: 6px;
-          margin: 2rem 0 0.5rem;
+          margin: 2rem auto 0.5rem;
         }
         .ms-center img + em, .ms-center figure figcaption {
           display: block;
