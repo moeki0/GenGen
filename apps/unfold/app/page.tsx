@@ -148,6 +148,16 @@ export default function Home() {
   const abortRef = useRef<AbortController | null>(null)
   const forkAbortRef = useRef<AbortController | null>(null)
   const introAbortRef = useRef<AbortController | null>(null)
+  const latestUserTurnRef = useRef<HTMLDivElement | null>(null)
+
+  // Scroll to latest user turn when a follow-up question is submitted
+  useEffect(() => {
+    const lastTurn = turns[turns.length - 1]
+    if (lastTurn?.role === 'user' && turns.length > 1) {
+      latestUserTurnRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [turns.length])
 
   const renderers = [...blockRenderers, deepdiveRenderer, boldRenderer, makeFootnoteRenderer(footnotes, factcheckLoading)]
 
@@ -1117,9 +1127,10 @@ export default function Home() {
 
           {/* Turns */}
           {turns.map((turn, turnIdx) => {
+            const isLastUserTurn = turn.role === 'user' && !turns.slice(turnIdx + 1).some(t => t.role === 'user')
             if (turn.role === 'user') {
               return (
-                <div key={turnIdx} style={{ padding: '1.5rem 0', textAlign: 'right' }}>
+                <div key={turnIdx} ref={isLastUserTurn ? latestUserTurnRef : null} style={{ padding: '1.5rem 0', textAlign: 'right' }}>
                   <span style={{
                     display: 'inline-block', background: '#111', color: '#fff',
                     padding: '0.5rem 0.875rem', borderRadius: '10px 10px 2px 10px',
@@ -1179,6 +1190,8 @@ export default function Home() {
             )
           })}
 
+          {/* Spacer so the latest question scrolls to the top of the viewport */}
+          {phase === 'streaming' && turns.length > 1 && <div style={{ height: '100vh' }} />}
 
         </div>
 
