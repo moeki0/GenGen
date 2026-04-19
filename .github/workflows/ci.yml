@@ -47,6 +47,9 @@ jobs:
       - run: npm ci
         working-directory: .
 
+      - run: npm run build
+        working-directory: packages/gengen
+
       - run: npm run test
       - run: npm run lint
       - run: npm run typecheck
