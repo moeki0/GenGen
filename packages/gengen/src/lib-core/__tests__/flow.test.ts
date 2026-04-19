@@ -62,6 +62,82 @@ describe('flow API', () => {
     expect(result).toContain('One of')
   })
 
+  it('g.pick().optional() sets isOptional flag', () => {
+    const node = g.pick(card).optional()
+    expect(node.isOptional).toBe(true)
+    expect(node._kind).toBe('oneOf')
+    expect(node.choices).toHaveLength(1)
+  })
+
+  it('g.pick() without optional has no isOptional flag', () => {
+    const node = g.pick(card)
+    expect(node.isOptional).toBeUndefined()
+  })
+
+  it('g.pick().optional() preserves choices', () => {
+    const stats = g.block('stats').describe('stats').schema({ items: g.list() })
+    const node = g.pick(card, stats).optional()
+    expect(node.choices).toHaveLength(2)
+  })
+
+  it('prompt() outputs "Optionally, one of" for optional pick', () => {
+    const stats = g.block('stats').describe('stats').schema({ items: g.list() })
+    const result = g.prompt([g.pick(card, stats).optional()])
+    expect(result).toContain('Optionally, one of')
+    expect(result).not.toContain('1. One of')
+  })
+
+  it('prompt() outputs "One of" (not optional) for regular pick', () => {
+    const result = g.prompt([g.pick(card)])
+    expect(result).toContain('One of')
+    expect(result).not.toContain('Optionally')
+  })
+
+  it('grouped picks in loop produce distinct steps', () => {
+    const a = g.block('timeline').describe('t').schema({ events: g.list() })
+    const b = g.block('callout').describe('c').schema({ note: g.blockquote() })
+    const c = g.block('roleplay').describe('r').schema({ prompt: g.text(), choices: g.list() })
+
+    const result = g.prompt([
+      g.loop([
+        g.prose('narrate'),
+        g.pick(a, b),          // multi → "One of: **timeline**, **callout**"
+        g.pick(c).optional(),  // single optional → "Optionally: **roleplay**"
+      ]),
+    ])
+
+    // Multi-block pick renders as "One of:"
+    expect(result).toContain('One of: **timeline**, **callout**')
+    // Single-block optional renders as "Optionally: **name**"
+    expect(result).toContain('Optionally: **roleplay**')
+    // All block names present in block reference
+    expect(result).toContain('**timeline**')
+    expect(result).toContain('**callout**')
+    expect(result).toContain('**roleplay**')
+  })
+
+  it('single-block optional pick shows trigger inline', () => {
+    const bignum = g.block('bignum', {
+      schema: { items: g.list() },
+      trigger: '数字が規模を物語るとき',
+    })
+    const result = g.prompt([g.pick(bignum).optional()])
+    expect(result).toContain('Optionally: **bignum** — 数字が規模を物語るとき')
+    expect(result).not.toContain('Optionally, one of')
+  })
+
+  it('single-block optional pick without trigger shows name only', () => {
+    const result = g.prompt([g.pick(card).optional()])
+    expect(result).toContain('Optionally: **card**')
+    expect(result).not.toContain('one of')
+  })
+
+  it('multi-block optional pick still shows "Optionally, one of"', () => {
+    const stats = g.block('stats').describe('s').schema({ items: g.list() })
+    const result = g.prompt([g.pick(card, stats).optional()])
+    expect(result).toContain('Optionally, one of: **card**, **stats**')
+  })
+
   it('g.flow() container produces same output as raw array', () => {
     const nodes = [g.prose('start'), card]
     const fromArray = g.prompt(nodes)
