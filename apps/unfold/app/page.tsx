@@ -963,13 +963,40 @@ export default function Home() {
           {eraStart !== null && eraEnd !== null && (() => {
             const GLOBAL_START = Math.min(-3000, eraStart - 200)
             const GLOBAL_END = 2025
-            const span = GLOBAL_END - GLOBAL_START
             const HEIGHT = 480
             const RAIL_X = 40
             const LABEL_X = RAIL_X + 16
             const LINE_H = 15 // min vertical spacing between labels
-            const topPx = Math.max(0, ((eraStart - GLOBAL_START) / span) * HEIGHT)
-            const heightPx = Math.max(1, Math.min(HEIGHT - topPx, ((eraEnd - eraStart) / span) * HEIGHT))
+            // Non-linear year → pixel mapping: recent events get more space, ancient BC gets compressed
+            const BP = [
+              { year: -5000, frac: 0.00 },
+              { year: -3000, frac: 0.04 },
+              { year: -1000, frac: 0.11 },
+              { year:     0, frac: 0.19 },
+              { year:   500, frac: 0.27 },
+              { year:  1000, frac: 0.37 },
+              { year:  1500, frac: 0.51 },
+              { year:  1800, frac: 0.67 },
+              { year:  1950, frac: 0.82 },
+              { year:  2025, frac: 1.00 },
+            ]
+            const getFrac = (yr: number): number => {
+              if (yr <= BP[0].year) return BP[0].frac
+              if (yr >= BP[BP.length - 1].year) return BP[BP.length - 1].frac
+              for (let i = 0; i < BP.length - 1; i++) {
+                if (yr >= BP[i].year && yr <= BP[i + 1].year) {
+                  const t = (yr - BP[i].year) / (BP[i + 1].year - BP[i].year)
+                  return BP[i].frac + t * (BP[i + 1].frac - BP[i].frac)
+                }
+              }
+              return 0
+            }
+            const fracStart = getFrac(GLOBAL_START)
+            const fracEnd = getFrac(GLOBAL_END)
+            const yearToPixel = (yr: number) =>
+              ((getFrac(yr) - fracStart) / (fracEnd - fracStart)) * HEIGHT
+            const topPx = Math.max(0, yearToPixel(eraStart))
+            const heightPx = Math.max(1, Math.min(HEIGHT - topPx, yearToPixel(eraEnd) - topPx))
             const majorTicks = [-5000, -4000, -3000, -2000, -1000, 0, 1000, 2000]
               .filter(y => y >= GLOBAL_START && y <= GLOBAL_END)
             const minorTicks = [-4500, -3500, -2500, -1500, -500, 500, 1500]
@@ -982,7 +1009,7 @@ export default function Home() {
             // Greedy label placement: push labels down to avoid overlap
             const placed: { dotY: number; labelY: number; name: string; year: number }[] = []
             for (const ev of sortedEvents) {
-              const dotY = ((ev.year - GLOBAL_START) / span) * HEIGHT
+              const dotY = yearToPixel(ev.year)
               let labelY = dotY
               for (const prev of placed) {
                 if (labelY < prev.labelY + LINE_H) labelY = prev.labelY + LINE_H
@@ -1000,12 +1027,12 @@ export default function Home() {
                   <rect x={RAIL_X - 1} y={topPx} width={3} height={heightPx} rx={2} fill="#cc3300" />
                   {/* Minor ticks */}
                   {minorTicks.map(y => {
-                    const py = ((y - GLOBAL_START) / span) * HEIGHT
+                    const py = yearToPixel(y)
                     return <line key={`m${y}`} x1={RAIL_X - 3} y1={py} x2={RAIL_X + 3} y2={py} stroke="#ddd" strokeWidth={1} />
                   })}
                   {/* Major ticks + year labels */}
                   {majorTicks.map(y => {
-                    const py = ((y - GLOBAL_START) / span) * HEIGHT
+                    const py = yearToPixel(y)
                     const inRange = y >= eraStart && y <= eraEnd
                     return (
                       <g key={y}>
