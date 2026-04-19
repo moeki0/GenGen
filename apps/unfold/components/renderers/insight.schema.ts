@@ -1,7 +1,7 @@
 import { g } from '@moeki0/gengen'
 
 export const insightSchema = g.block('insight', {
-  description: 'How this historical topic connects to the present day. Output as a blockquote (> ...).',
+  trigger: 'この出来事が現代とつながる洞察、または歴史的意義を一言で言い表せるとき。',
   schema: {
     note: g.blockquote(),
   },

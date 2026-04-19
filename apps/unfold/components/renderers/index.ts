@@ -7,9 +7,26 @@ import calloutRenderer from './callout'
 import quizRenderer from './quiz'
 import countryRenderer from './country'
 import eventRenderer from './event'
+import pullquoteRenderer from './pullquote'
+import compareRenderer from './compare'
+import termcardRenderer from './termcard'
+import bignumRenderer from './bignum'
+import sourceRenderer from './source'
+import agelineRenderer from './ageline'
+import roleplayRenderer from './roleplay'
+import whatifRenderer from './whatif'
+import animapRenderer from './animap'
 
 // event and country BEFORE people (people's g.list(1) would match anything otherwise)
-export const blockRenderers = [eventRenderer, countryRenderer, timelineRenderer, statsRenderer, quizRenderer, peopleRenderer, insightRenderer, calloutRenderer]
+export const blockRenderers = [
+  eventRenderer, countryRenderer,
+  compareRenderer, animapRenderer,
+  timelineRenderer, statsRenderer, quizRenderer,
+  pullquoteRenderer, bignumRenderer, sourceRenderer,
+  agelineRenderer, roleplayRenderer, whatifRenderer,
+  termcardRenderer,
+  peopleRenderer, insightRenderer, calloutRenderer,
+]
 
 export { timelineSchema } from './timeline.schema'
 export { eventSchema } from './event.schema'
@@ -19,9 +36,17 @@ export { statsSchema } from './stats.schema'
 export { calloutSchema } from './callout.schema'
 export { quizSchema } from './quiz.schema'
 export { countrySchema } from './country.schema'
+export { pullquoteSchema } from './pullquote.schema'
+export { compareSchema } from './compare.schema'
+export { termcardSchema } from './termcard.schema'
+export { bignumSchema } from './bignum.schema'
+export { sourceSchema } from './source.schema'
+export { agelineSchema } from './ageline.schema'
+export { roleplaySchema } from './roleplay.schema'
+export { whatifSchema } from './whatif.schema'
+export { animapSchema } from './animap.schema'
 
 export const sectionHeading = g.heading(2)
-// no splits — plain ## heading text
 
 export const deepdiveInline = g.inline('deepdive', {
   marker: ['[[', ']]'],
