@@ -4,7 +4,7 @@ import {
   timelineSchema, peopleSchema, insightSchema, statsSchema, calloutSchema, quizSchema,
   countrySchema, eventSchema, pullquoteSchema, compareSchema, bignumSchema, sourceSchema,
   agelineSchema, roleplaySchema, whatifSchema, animapSchema,
-  deepdiveInline, boldInline, footnoteInline,
+  deepdiveInline, boldInline, footnoteInline, imageInline,
 } from '@/components/renderers'
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY!)
@@ -23,6 +23,7 @@ const mainFlow = g.flow([
   deepdiveInline,
   boldInline,
   footnoteInline,
+  imageInline,
 ])
 
 const emphasisFlow = g.flow([
