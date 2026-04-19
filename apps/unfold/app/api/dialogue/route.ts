@@ -4,7 +4,7 @@ import {
   timelineSchema, peopleSchema, insightSchema, statsSchema, calloutSchema, quizSchema,
   countrySchema, eventSchema, pullquoteSchema, compareSchema, bignumSchema, sourceSchema,
   agelineSchema, roleplaySchema, whatifSchema, animapSchema,
-  deepdiveInline, boldInline, footnoteInline, imageInline,
+  deepdiveInline, boldInline, footnoteInline,
 } from '@/components/renderers'
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY!)
@@ -23,7 +23,6 @@ const mainFlow = g.flow([
   deepdiveInline,
   boldInline,
   footnoteInline,
-  imageInline,
 ])
 
 const emphasisFlow = g.flow([
@@ -48,7 +47,8 @@ const baseInstruction = `You are a history educator who grounds every claim in v
 - 語り口は親しみやすく、読みやすい日本語で。事実の正確さは妥協しない。
 - 「〜と言われている」「〜だろう」のような曖昧な表現は避ける。
 - Be specific: real names, exact dates, precise numbers, named locations.
-- Use [[deepdive]] links around every important person, place, event, concept. Example: [[ルイ16世]]は[[ヴェルサイユ宮殿]]で[[三部会]]を招集した。
+- Use [[deepdive]] links around every important person, place, event, concept. Example: [[ルイ16世]]は[[ヴェルサイユ宮殿]]で[[三部会]]を召集した。
+- To insert a relevant image, write ![description]() on its own line with blank lines before and after. Example:\n\n![アレクサンドロス大王]()\n\nThe image will be fetched automatically. Use sparingly — one per section at most.
 - Write entirely in Japanese.`
 
 const mainSystemPrompt = `${baseInstruction}

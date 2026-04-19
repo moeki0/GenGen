@@ -7,7 +7,6 @@ import { blockRenderers, sectionHeading } from '@/components/renderers'
 import { deepdiveRenderer } from '@/components/renderers/deepdive'
 import { boldRenderer } from '@/components/renderers/bold'
 import { makeFootnoteRenderer, type Footnote } from '@/components/renderers/footnote'
-import { inlineImageRenderer } from '@/components/renderers/inlineImage'
 import { resolveCountryCodes } from '@/lib/countries'
 import { extractCountryCodes } from '@/components/SidePanel'
 import { ComposableMap, Geographies, Geography } from 'react-simple-maps'
@@ -125,7 +124,7 @@ export default function Home() {
   const forkAbortRef = useRef<AbortController | null>(null)
   const introAbortRef = useRef<AbortController | null>(null)
 
-  const renderers = [...blockRenderers, deepdiveRenderer, boldRenderer, makeFootnoteRenderer(footnotes), inlineImageRenderer]
+  const renderers = [...blockRenderers, deepdiveRenderer, boldRenderer, makeFootnoteRenderer(footnotes)]
 
   const active = turns.length > 0 || phase === 'loading' || phase === 'streaming'
   const [hoveredTopic, setHoveredTopic] = useState<number | null>(null)

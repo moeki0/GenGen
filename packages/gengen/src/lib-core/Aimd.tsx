@@ -61,11 +61,20 @@ function DefaultMarkdown({ markdown, inlines = [] }: { markdown: string; inlines
           <h3 style={{ fontSize: '0.9375rem', fontWeight: 600, color: '#555', marginTop: '1.5rem', marginBottom: '0.4rem', fontFamily: 'var(--font-sans)' }}>{children}</h3>
         ),
         img: ({ src, alt }) => {
-          if (!src) return null
+          if (!src) return (
+            <figure style={{ margin: '2rem 0' }}>
+              <div style={{ width: '200px', height: '120px', background: '#f5f5f5', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.375rem', color: '#bbb', fontSize: '0.8125rem', fontFamily: 'var(--font-sans)' }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+                {alt}
+              </div>
+            </figure>
+          )
           return (
             <figure style={{ margin: '2rem 0' }}>
               <img src={src} alt={alt ?? ''} style={{ width: '100%', maxWidth: '200px', height: 'auto', display: 'block', borderRadius: '6px' }} />
-              {alt && <figcaption style={{ fontSize: '0.8125rem', color: '#888', marginTop: '0.4rem', textAlign: 'center', fontFamily: 'var(--font-sans)' }}>{alt}</figcaption>}
+              {alt && <figcaption style={{ fontSize: '0.8125rem', color: '#888', marginTop: '0.4rem', fontFamily: 'var(--font-sans)' }}>{alt}</figcaption>}
             </figure>
           )
         },
