@@ -138,10 +138,25 @@ function AnimapRenderer({ data }: { data: string }) {
           style={{ width: '28px', height: '28px', borderRadius: '50%', background: '#111', color: '#fff', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', flexShrink: 0 }}>
           {playing ? '❚❚' : '▶'}
         </button>
-        <div style={{ flex: 1, height: '4px', background: '#ddd7c4', borderRadius: '2px', position: 'relative', cursor: 'pointer' }}
+        <div style={{ flex: 1, position: 'relative', cursor: 'pointer', paddingBottom: '14px' }}
           onClick={e => { const r = e.currentTarget.getBoundingClientRect(); setIdx(Math.round((e.clientX - r.left) / r.width * (frames.length - 1))); setPlaying(false) }}>
-          <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: `${pct}%`, background: '#cc3300', borderRadius: '2px', transition: 'width 0.4s ease' }} />
-          <div style={{ position: 'absolute', top: '50%', left: `${pct}%`, transform: 'translate(-50%, -50%)', width: '10px', height: '10px', borderRadius: '50%', background: '#cc3300', border: '2px solid #fff', boxShadow: '0 1px 3px rgba(0,0,0,0.2)', transition: 'left 0.4s ease' }} />
+          <div style={{ height: '4px', background: '#ddd7c4', borderRadius: '2px', position: 'relative' }}>
+            <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: `${pct}%`, background: '#cc3300', borderRadius: '2px', transition: 'width 0.4s ease' }} />
+            <div style={{ position: 'absolute', top: '50%', left: `${pct}%`, transform: 'translate(-50%, -50%)', width: '10px', height: '10px', borderRadius: '50%', background: '#cc3300', border: '2px solid #fff', boxShadow: '0 1px 3px rgba(0,0,0,0.2)', transition: 'left 0.4s ease', zIndex: 1 }} />
+          </div>
+          {frames.map((frame, i) => {
+            const tickPct = frames.length > 1 ? (i / (frames.length - 1)) * 100 : 0
+            const isActive = i === idx
+            const isPast = i <= idx
+            return (
+              <div key={i} style={{ position: 'absolute', top: '4px', left: `${tickPct}%`, transform: 'translateX(-50%)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px', pointerEvents: 'none' }}>
+                <div style={{ width: '1px', height: isActive ? '6px' : '4px', background: isPast ? '#cc3300' : '#bbb0a0' }} />
+                <span style={{ fontSize: '0.5rem', color: isActive ? '#cc3300' : '#aaa', fontWeight: isActive ? 700 : 400, fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap', lineHeight: 1 }}>
+                  {frame.year}
+                </span>
+              </div>
+            )
+          })}
         </div>
         <span style={{ fontSize: '0.7rem', color: '#6a5a3a', fontVariantNumeric: 'tabular-nums' }}>{idx + 1}/{frames.length}</span>
       </div>
