@@ -164,7 +164,6 @@ function AnimapRenderer({ data }: { data: string }) {
             )
           })}
         </div>
-        <span style={{ fontSize: '0.7rem', color: '#6a5a3a', fontVariantNumeric: 'tabular-nums' }}>{idx + 1}/{frames.length}</span>
       </div>
     </div>
   )
