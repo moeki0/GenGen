@@ -6,32 +6,38 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.90.0",
     "@google/generative-ai": "^0.24.1",
     "@moeki0/gengen": "0.0.3",
     "@vercel/analytics": "^2.0.1",
+    "d3-force": "^3.0.0",
     "lucide-react": "^1.8.0",
+    "mdast-util-from-markdown": "^2",
+    "mdast-util-to-markdown": "^2",
+    "mdast-util-to-string": "^4",
     "next": "16.2.4",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "react-markdown": "^10.1.0",
-    "remark-gfm": "^4",
-    "mdast-util-from-markdown": "^2",
-    "mdast-util-to-string": "^4",
-    "mdast-util-to-markdown": "^2",
-    "react-simple-maps": "^3.0.0"
+    "react-simple-maps": "^3.0.0",
+    "relation-graph-react": "^2.2.11",
+    "remark-gfm": "^4"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/d3-force": "^3.0.10",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.4",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^4.1.4"
   }
 }
