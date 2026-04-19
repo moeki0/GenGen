@@ -60,12 +60,15 @@ function DefaultMarkdown({ markdown, inlines = [] }: { markdown: string; inlines
         h3: ({ children }) => (
           <h3 style={{ fontSize: '0.9375rem', fontWeight: 600, color: '#555', marginTop: '1.5rem', marginBottom: '0.4rem', fontFamily: 'var(--font-sans)' }}>{children}</h3>
         ),
-        img: ({ src, alt }) => (
-          <figure style={{ margin: '2rem 0' }}>
-            <img src={src} alt={alt ?? ''} style={{ width: '100%', maxWidth: '200px', height: 'auto', display: 'block', borderRadius: '6px' }} />
-            {alt && <figcaption style={{ fontSize: '0.8125rem', color: '#888', marginTop: '0.4rem', textAlign: 'center', fontFamily: 'var(--font-sans)' }}>{alt}</figcaption>}
-          </figure>
-        ),
+        img: ({ src, alt }) => {
+          if (!src) return null
+          return (
+            <figure style={{ margin: '2rem 0' }}>
+              <img src={src} alt={alt ?? ''} style={{ width: '100%', maxWidth: '200px', height: 'auto', display: 'block', borderRadius: '6px' }} />
+              {alt && <figcaption style={{ fontSize: '0.8125rem', color: '#888', marginTop: '0.4rem', textAlign: 'center', fontFamily: 'var(--font-sans)' }}>{alt}</figcaption>}
+            </figure>
+          )
+        },
         blockquote: ({ children }) => (
           <blockquote style={{ borderLeft: '2px solid #333', paddingLeft: '1.25rem', margin: '1.5rem 0', color: '#555', fontStyle: 'italic', fontSize: '0.9375rem' }}>{children}</blockquote>
         ),
