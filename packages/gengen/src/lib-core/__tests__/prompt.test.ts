@@ -187,6 +187,66 @@ describe('prompt() — inline markers section', () => {
   })
 })
 
+describe('prompt() — trigger field', () => {
+  it('includes trigger with "Use when:" prefix in flat list mode', () => {
+    const r1 = g.block('ageline', {
+      schema: { items: g.list() },
+      trigger: '複数の主要人物が同じ瞬間に居合わせた場面',
+      component: () => null,
+    })
+    const r2 = g.block('whatif', {
+      schema: { question: g.text() },
+      trigger: '「もし〜だったら？」と言える分岐点がある場面',
+      component: () => null,
+    })
+    const p = g.prompt([r1, r2])
+    expect(p).toContain('Use when: 複数の主要人物が同じ瞬間に居合わせた場面')
+    expect(p).toContain('Use when: 「もし〜だったら？」と言える分岐点がある場面')
+  })
+
+  it('shows trigger under the block name with ↳ prefix', () => {
+    const r = g.block('source', {
+      schema: { text: g.blockquote() },
+      trigger: '史料・法令・書簡を引用できるとき',
+      component: () => null,
+    })
+    const p = g.prompt([r])
+    expect(p).toContain('↳ Use when: 史料・法令・書簡を引用できるとき')
+  })
+
+  it('omits trigger line when trigger is not set', () => {
+    const r = g.block('callout', {
+      schema: { note: g.blockquote() },
+      component: () => null,
+    })
+    const p = g.prompt([r])
+    expect(p).not.toContain('Use when:')
+    expect(p).not.toContain('↳')
+  })
+
+  it('trigger is included in flow prompt block reference', () => {
+    const schema = g.block('bignum', {
+      schema: { items: g.list() },
+      trigger: '数字そのものが規模を物語るとき',
+    })
+    const flow = g.flow([g.pick(schema)])
+    const p = g.prompt(flow)
+    expect(p).toContain('Use when: 数字そのものが規模を物語るとき')
+  })
+
+  it('trigger coexists with description', () => {
+    const r = g.block('compare', {
+      schema: { table: g.table() },
+      description: '比較表',
+      trigger: '制度・勢力を対比できる場面',
+      component: () => null,
+    })
+    const p = g.prompt([r])
+    expect(p).toContain('比較表')
+    expect(p).toContain('Use when: 制度・勢力を対比できる場面')
+  })
+})
+
 describe('prompt() — list constraints in prompt', () => {
   it('includes "at least N" for list().min(n)', () => {
     const r = g.block('quiz', {
