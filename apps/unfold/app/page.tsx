@@ -1350,6 +1350,19 @@ export default function Home() {
         .ms-center {
           min-width: 0;
         }
+        .ms-center img {
+          max-width: 200px;
+          height: auto;
+          display: block;
+          border-radius: 6px;
+          margin: 2rem 0 0.5rem;
+        }
+        .ms-center img + em, .ms-center figure figcaption {
+          display: block;
+          font-size: 0.8125rem;
+          color: #888;
+          margin-bottom: 1.5rem;
+        }
         .ms-right {
           position: sticky;
           top: 1rem;
