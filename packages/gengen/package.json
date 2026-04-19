@@ -1,6 +1,6 @@
 {
   "name": "@moeki0/gengen",
-  "version": "0.1.0",
+  "version": "0.0.4",
   "type": "module",
   "description": "Schema DSL for structured LLM Markdown output",
   "keywords": [
