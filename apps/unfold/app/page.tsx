@@ -223,10 +223,8 @@ export default function Home() {
   }
 
   async function startFactcheck(markdown: string) {
-    console.log('[factcheck] startFactcheck called, markdown length:', markdown.length)
     setFootnotes(new Map())
     setFactcheckLoading(true)
-    console.log('[factcheck] setFactcheckLoading(true) called')
     try {
       const res = await fetch('/api/factcheck', {
         method: 'POST',
