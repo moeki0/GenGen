@@ -58,7 +58,7 @@ function EventRenderer({ heading, events }: { heading: string; events: { name: s
                   fontFamily: 'var(--font-sans)', fontVariantNumeric: 'tabular-nums',
                   letterSpacing: '0.02em', margin: '0 0 0.25rem',
                 }}>
-                  {e.year}
+                  {inlineText(e.year)}
                 </p>
                 <p style={{
                   fontSize: '0.75rem', color: '#444', lineHeight: 1.4,

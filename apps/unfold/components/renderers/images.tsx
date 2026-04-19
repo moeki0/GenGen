@@ -1,9 +1,11 @@
 'use client'
 
 import { g } from '@moeki0/gengen'
+import { useInlineText } from '@moeki0/gengen/react'
 import { imagesSchema } from './images.schema'
 
 function ImagesRenderer({ images }: { images: string[] }) {
+  const inlineText = useInlineText()
   const parsed = images.map((item) => {
     const [url, ...rest] = item.split('—')
     return { url: url.trim(), caption: rest.join('—').trim() }
@@ -23,7 +25,7 @@ function ImagesRenderer({ images }: { images: string[] }) {
             />
             {img.caption && (
               <figcaption className="px-2 py-1.5 text-xs text-stone-500 leading-snug">
-                {img.caption}
+                {inlineText(img.caption)}
               </figcaption>
             )}
           </figure>
