@@ -170,6 +170,19 @@ export default function Home() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  async function placeAndResolveImages(text: string, priorTurns: Turn[]) {
+    try {
+      const res = await fetch('/api/images-place', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content: text }),
+      })
+      const placed = await res.text()
+      setTurns([...priorTurns, { role: 'assistant', content: placed }])
+      await resolveInlineImages(placed, priorTurns)
+    } catch { /* best-effort */ }
+  }
+
   async function resolveInlineImages(text: string, priorTurns: Turn[]) {
     // Find all ![name]() patterns (empty URL = placeholder for image search)
     const names = [...new Set([...text.matchAll(/!\[([^\]]+)\]\(\)/g)].map(m => m[1]))]
@@ -214,9 +227,9 @@ export default function Home() {
       }
       setTurns([...turnsToSend, { role: 'assistant', content: text }])
       setPhase('ready')
-      // Kick off factcheck and inline image resolution asynchronously after generation
+      // Kick off factcheck and image placement+resolution asynchronously after generation
       startFactcheck(text)
-      resolveInlineImages(text, turnsToSend)
+      placeAndResolveImages(text, turnsToSend)
     } catch (e) {
       if ((e as Error).name !== 'AbortError') setPhase('ready')
     }
