@@ -171,6 +171,28 @@ export default function Home() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  async function resolveInlineImages(text: string, priorTurns: Turn[]) {
+    // Find all ![name]() patterns (empty URL = placeholder for image search)
+    const names = [...new Set([...text.matchAll(/!\[([^\]]+)\]\(\)/g)].map(m => m[1]))]
+    if (names.length === 0) return
+    try {
+      const res = await fetch('/api/images', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ names }),
+      })
+      const imageMap: Record<string, string | null> = await res.json()
+      let resolved = text
+      for (const name of names) {
+        const url = imageMap[name]
+        if (url) resolved = resolved.replaceAll(`![${name}]()`, `![${name}](${url})`)
+      }
+      if (resolved !== text) {
+        setTurns([...priorTurns, { role: 'assistant', content: resolved }])
+      }
+    } catch { /* best-effort */ }
+  }
+
   async function streamDialogue(turnsToSend: Turn[], topicOverride?: string) {
     const ctrl = new AbortController()
     abortRef.current = ctrl
@@ -193,8 +215,9 @@ export default function Home() {
       }
       setTurns([...turnsToSend, { role: 'assistant', content: text }])
       setPhase('ready')
-      // Kick off factcheck asynchronously after generation
+      // Kick off factcheck and inline image resolution asynchronously after generation
       startFactcheck(text)
+      resolveInlineImages(text, turnsToSend)
     } catch (e) {
       if ((e as Error).name !== 'AbortError') setPhase('ready')
     }
