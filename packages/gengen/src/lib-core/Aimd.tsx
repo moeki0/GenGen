@@ -26,10 +26,12 @@ function DefaultMarkdown({ markdown, inlines = [] }: { markdown: string; inlines
       remarkPlugins={[remarkGfm]}
       components={{
         p: ({ children, node }) => {
-          // Avoid invalid <p><figure> nesting when paragraph contains only an image
-          const isImageOnly = (node as { children?: { type: string; tagName?: string }[] } | undefined)
-            ?.children?.length === 1 &&
-            (node as { children?: { tagName?: string }[] } | undefined)?.children?.[0]?.tagName === 'img'
+          // Avoid invalid <p><figure> nesting when paragraph contains only an image.
+          // Filter out whitespace-only text nodes before checking.
+          type HastChild = { type: string; tagName?: string; value?: string }
+          const significant = (node as { children?: HastChild[] } | undefined)
+            ?.children?.filter(c => !(c.type === 'text' && !c.value?.trim()))
+          const isImageOnly = significant?.length === 1 && significant[0].tagName === 'img'
           if (isImageOnly) return <div>{children}</div>
           return <p style={{ color: '#444', lineHeight: 1.8, marginBottom: '1rem', fontSize: '0.9375rem', fontFamily: 'var(--font-sans)' }}>{wrap(children)}</p>
         },
