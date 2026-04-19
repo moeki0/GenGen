@@ -47,7 +47,7 @@ jobs:
       - run: npm ci
         working-directory: .
 
-      - run: npm ci
+      - run: npm ci --legacy-peer-deps
 
       - run: npm run build
         working-directory: packages/gengen
