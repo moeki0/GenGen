@@ -13,7 +13,6 @@ import {
   shift,
   autoUpdate,
 } from '@floating-ui/react'
-import { useRef } from 'react'
 import { g } from '@moeki0/gengen'
 import { footnoteInline } from './index'
 
@@ -26,7 +25,7 @@ function FootnoteMarker({ text, footnotes }: { text: string; footnotes?: Map<num
   const num = parseInt(text, 10)
   const footnote = footnotes?.get(num)
   const [open, setOpen] = useState(false)
-  const arrowRef = useRef<HTMLSpanElement>(null)
+  const [arrowEl, setArrowEl] = useState<HTMLSpanElement | null>(null)
 
   const { refs, floatingStyles, context, middlewareData } = useFloating({
     open,
@@ -37,7 +36,7 @@ function FootnoteMarker({ text, footnotes }: { text: string; footnotes?: Map<num
       offset(8),
       flip(),
       shift({ padding: 8 }),
-      arrow({ element: arrowRef }),
+      arrow({ element: arrowEl }),
     ],
   })
 
@@ -80,6 +79,7 @@ function FootnoteMarker({ text, footnotes }: { text: string; footnotes?: Map<num
       {open && footnote && (
         <FloatingPortal>
           <div
+            // eslint-disable-next-line react-hooks/refs
             ref={refs.setFloating}
             style={{
               ...floatingStyles,
@@ -118,7 +118,7 @@ function FootnoteMarker({ text, footnotes }: { text: string; footnotes?: Map<num
               </ul>
             )}
             <span
-              ref={arrowRef}
+              ref={setArrowEl}
               style={{
                 position: 'absolute',
                 left: arrowX != null ? `${arrowX}px` : '',

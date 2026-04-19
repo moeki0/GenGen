@@ -128,20 +128,22 @@ export default function Home() {
 
   const active = turns.length > 0 || phase === 'loading' || phase === 'streaming'
   const [hoveredTopic, setHoveredTopic] = useState<number | null>(null)
-  const [isJa, setIsJa] = useState(true)
+  const [isJa] = useState(() =>
+    typeof navigator !== 'undefined' ? navigator.language.startsWith('ja') : true
+  )
 
-  // Auto-start from URL query + detect language
+  // Auto-start from URL query
   const startedRef = useRef(false)
   useEffect(() => {
-    setIsJa(navigator.language.startsWith('ja'))
     if (startedRef.current) return
     const q = new URLSearchParams(window.location.search).get('q')
     if (q) {
       startedRef.current = true
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setTopic(q)
       startDialogue(q, false)
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps, react-hooks/set-state-in-effect
   }, [])
 
   // Handle browser back/forward
