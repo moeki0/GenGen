@@ -2,7 +2,7 @@ import { parseMarkdown as fromMarkdown } from './parseMarkdown'
 import { toString } from 'mdast-util-to-string'
 import type { Root, Code, List, Heading, Blockquote, Table, RootContent } from 'mdast'
 import { isListPartWithSome, isListWithAll, isListWithFormat, isTextMatch } from './schema'
-import type { SchemaPart, InferSchema, TextMatchPart } from './schema'
+import type { SchemaPart, InferSchema } from './schema'
 
 
 // --- Extraction with consumed-node tracking ---
